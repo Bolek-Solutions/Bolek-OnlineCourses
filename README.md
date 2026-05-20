@@ -1,6 +1,6 @@
-# Bolek-Shop
+# Bolek-OnlineCourses
 
-Bolek-Shop is a Django-based online course assessment app with a Cloudflare Worker reverse-proxy setup for edge routing.
+Bolek-OnlineCourses is a Django-based online course assessment app with a Cloudflare Worker reverse-proxy setup for edge routing.
 
 > **Important:** This repository currently contains the `onlinecourse` app and deployment/proxy configuration files. A full Django project scaffold (`manage.py`, project `settings.py`, etc.) is not included in this repo snapshot.
 
