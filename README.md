@@ -2,12 +2,17 @@
 
 Bolek-OnlineCourses is a Django-based online course assessment app with a Cloudflare Worker reverse-proxy setup for edge routing.
 
-> **Important:** This repository currently contains the `onlinecourse` app and deployment/proxy configuration files. A full Django project scaffold (`manage.py`, project `settings.py`, etc.) is not included in this repo snapshot.
+This repository now includes a **complete runnable Django scaffold** so you can launch the UI locally and collect all assignment evidence.
 
-## What is in this repository
+## Project structure
 
 ```text
 Bolek-Shop/
+├── bolek_project/
+│   ├── asgi.py
+│   ├── settings.py
+│   ├── urls.py
+│   └── wsgi.py
 ├── onlinecourse/
 │   ├── admin.py
 │   ├── models.py
@@ -19,92 +24,70 @@ Bolek-Shop/
 │   └── templates/onlinecourse/
 │       ├── course_details_bootstrap.html
 │       └── exam_result_bootstrap.html
+├── templates/
+│   └── base.html
 ├── worker/
 │   └── index.js
+├── manage.py
 ├── wrangler.toml
-├── requirements.txt
 ├── DEPLOYMENT_OPTION_A.md
-├── questions.md
-├── .env.example
-└── README.md
+└── questions.md
 ```
 
-## Application overview
-
-### Django app: `onlinecourse`
-
-The app models a course/exam workflow:
-
-- `Instructor`, `Learner`, `Course`, `Lesson`, `Enrollment`, `Question`, `Choice`, `Submission`
-- Learners can submit answers for course questions.
-- Submissions are graded by exact match of selected choices versus correct choices.
-
-Core files:
-
-- **Models:** `onlinecourse/models.py`
-- **Admin registration:** `onlinecourse/admin.py`
-- **Routes:** `onlinecourse/urls.py`
-- **Views:** `onlinecourse/views.py`
-- **Templates:** `onlinecourse/templates/onlinecourse/*.html`
-
-### Edge proxy: Cloudflare Worker
-
-`worker/index.js` forwards requests to a backend origin configured with the `BACKEND_ORIGIN` secret/environment variable.
-
-`wrangler.toml` points Wrangler to that worker entry file.
-
-## URL endpoints in `onlinecourse`
-
-- `course/<int:pk>/` → Course details + exam form
-- `course/<int:course_id>/submit/` → Exam submission endpoint (`POST`)
-- `course/<int:course_id>/submission/<int:submission_id>/result/` → Exam result page
-
-## Dependencies
-
-Install Python packages:
+## Run locally (for assignment screenshots)
 
 ```bash
 pip install -r requirements.txt
-```
-
-Main packages in this repo:
-
-- Django 4.2–5.1
-- gunicorn
-- dj-database-url
-- whitenoise
-- django-storages
-- boto3
-
-## Running locally
-
-Because this repo does not include `manage.py`/project settings, run steps depend on the Django project that includes this app.
-
-Typical integration steps in your Django project:
-
-1. Add `onlinecourse` to `INSTALLED_APPS`.
-2. Include app URLs from your project `urls.py`.
-3. Run migrations.
-4. Start server.
-
-Example commands (from your Django project root):
-
-```bash
-python manage.py makemigrations onlinecourse
 python manage.py migrate
+python manage.py createsuperuser
 python manage.py runserver
 ```
 
-## Deployment
+Open:
+- Admin: `http://127.0.0.1:8000/admin/`
 
-See `DEPLOYMENT_OPTION_A.md` for the recommended deployment approach:
+## Assignment completion checklist
 
-- Django backend on a Python host
-- Cloudflare in front (DNS/CDN)
-- Optional Worker proxy (`worker/index.js`)
-- Optional Cloudflare R2 for static/media
+Use `questions.md` as grading rubric. You need:
 
-## Notes
+1. GitHub URL: `onlinecourse/models.py`
+2. GitHub URL: `onlinecourse/admin.py`
+3. Screenshot file named: `03-admin-site`
+4. GitHub URL: `onlinecourse/templates/onlinecourse/course_details_bootstrap.html`
+5. GitHub URL: `onlinecourse/views.py`
+6. GitHub URL: `onlinecourse/urls.py`
+7. Screenshot file named: `07-final`
 
-- `questions.md` contains assignment/reference questions.
-- `.env.example` is included for environment variable guidance.
+### How to get `03-admin-site`
+
+1. Login to `/admin/`.
+2. Confirm both sections are visible:
+   - Authentication and Authorization
+   - OnlineCourse
+3. Capture and save screenshot as `03-admin-site`.
+
+### How to get `07-final`
+
+1. In admin create data in this order:
+   - User (learner)
+   - Instructor
+   - Learner
+   - Course
+   - Lesson linked to course
+   - Question linked to lesson
+   - 2+ choices linked to question (mark correct ones)
+   - Enrollment (user + course)
+2. Login as enrolled user.
+3. Open `http://127.0.0.1:8000/course/<course_id>/`.
+4. Submit correct answers.
+5. On result page, confirm:
+   - "Congratulations" message
+   - score percentage
+   - exam results summary
+6. Save screenshot as `07-final`.
+
+## Deployment notes
+
+Cloudflare Pages is not required for this assignment. If desired, use Option A from `DEPLOYMENT_OPTION_A.md`:
+- host Django on Python platform
+- optionally place Cloudflare Worker in front
