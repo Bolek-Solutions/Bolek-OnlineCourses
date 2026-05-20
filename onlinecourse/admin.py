@@ -23,7 +23,12 @@ class LessonAdmin(admin.ModelAdmin):
     list_display = ('title', 'course', 'order')
 
 
-admin.site.register(Course)
+class CourseAdmin(admin.ModelAdmin):
+    list_display = ('name', 'pub_date', 'total_enrollment')
+    search_fields = ('name',)
+
+
+admin.site.register(Course, CourseAdmin)
 admin.site.register(Instructor)
 admin.site.register(Learner)
 admin.site.register(Enrollment)
