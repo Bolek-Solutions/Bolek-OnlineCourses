@@ -1,0 +1,6 @@
+name = "bolek-shop-edge"
+main = "worker/index.js"
+compatibility_date = "2026-05-20"
+
+[vars]
+# Set with `wrangler secret put BACKEND_ORIGIN` in real deployment
