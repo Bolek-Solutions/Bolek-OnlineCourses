@@ -45,24 +45,28 @@ def show_exam_result(request, course_id, submission_id):
     questions = Question.objects.filter(lesson__course=course).distinct()
 
     total_grade = sum(question.grade for question in questions)
-    earned_grade = 0
+    total_score = 0
     correct_choices = []
 
     for question in questions:
-        correct_ids = set(question.choice_set.filter(is_correct=True).values_list('id', flat=True))
-        chosen_ids = set(selected_choices.filter(question=question).values_list('id', flat=True))
-        if correct_ids == chosen_ids:
-            earned_grade += question.grade
+        selected_ids_for_question = list(
+            selected_choices.filter(question=question).values_list('id', flat=True)
+        )
+        if question.is_get_score(selected_ids_for_question):
+            total_score += question.grade
         correct_choices.extend(question.choice_set.filter(is_correct=True))
 
-    grade_percent = int((earned_grade / total_grade) * 100) if total_grade else 0
+    grade_percent = int((total_score / total_grade) * 100) if total_grade else 0
+    selected_ids = list(selected_choices.values_list('id', flat=True))
 
     context = {
         'course': course,
         'submission': submission,
         'grade': grade_percent,
-        'earned_grade': earned_grade,
+        'earned_grade': total_score,
         'total_grade': total_grade,
+        'possible': total_grade,
+        'selected_ids': selected_ids,
         'correct_answers': correct_choices,
         'selected_choices': selected_choices,
     }
