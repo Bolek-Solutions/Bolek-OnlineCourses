@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="card shadow-sm mb-4">
+    <div class="card-body">
+      <h1 class="h3 mb-3">Exam Result - {{ course.name }}</h1>
+      {% if grade >= 80 %}
+      <div class="alert alert-success" role="alert">
+        <strong>Congratulations!</strong> You passed the assessment.
+      </div>
+      {% else %}
+      <div class="alert alert-warning" role="alert">
+        Keep practicing! You can improve your score in the next attempt.
+      </div>
+      {% endif %}
+
+      <div class="row g-3 mb-2">
+        <div class="col-md-4">
+          <div class="border rounded p-3 bg-light">
+            <div class="text-muted small">Score Percentage</div>
+            <div class="display-6">{{ grade }}%</div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="border rounded p-3 bg-light">
+            <div class="text-muted small">Points Earned</div>
+            <div class="display-6">{{ earned_grade }}</div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="border rounded p-3 bg-light">
+            <div class="text-muted small">Total Points</div>
+            <div class="display-6">{{ total_grade }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card shadow-sm">
+    <div class="card-header bg-light">
+      <h2 class="h5 mb-0">Answer Summary</h2>
+    </div>
+    <div class="card-body">
+      <h3 class="h6">Correct Answers</h3>
+      <ul class="list-group mb-4">
+        {% for answer in correct_answers %}
+        <li class="list-group-item list-group-item-success">{{ answer.question.question_text }} — {{ answer.choice_text }}</li>
+        {% empty %}
+        <li class="list-group-item">No correct answers configured.</li>
+        {% endfor %}
+      </ul>
+
+      <h3 class="h6">Your Selected Choices</h3>
+      <ul class="list-group">
+        {% for choice in selected_choices %}
+        <li class="list-group-item list-group-item-info">{{ choice.question.question_text }} — {{ choice.choice_text }}</li>
+        {% empty %}
+        <li class="list-group-item">No choices selected.</li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+</div>
+{% endblock %}
